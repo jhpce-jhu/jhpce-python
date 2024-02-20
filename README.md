@@ -1,4 +1,4 @@
-# jhpce-tools
+# jhpce-python
 
 This is a repository to apply and use JHPCE cluster management locally
 in python. 
