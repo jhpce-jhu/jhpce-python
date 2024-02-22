@@ -1,3 +1,3 @@
 #!/usr/bin/python
 module load python
-python < pyscript.py
+python < pyscript.py > out.txt
