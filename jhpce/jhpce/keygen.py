@@ -1,4 +1,6 @@
 import paramiko
+from getpass import getpass
+
 #writes a private key to a file in the formate JHPCE wants
 #filename is the file and path, typically ~/.ssh/keyname
 #password is the password for the key and is required
@@ -10,5 +12,8 @@ def keygen(filename, password) :
     print("ssh-rsa " + key.get_base64())
     return key
 
-def loadkey(filename, password):
+## Recommended way to load the password
+def loadkey(filename):
+    from getpass import getpass
+    password = getpass()
     return paramiko.RSAKey.from_private_key_file(filename, password)

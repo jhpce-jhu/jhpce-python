@@ -1,9 +1,7 @@
 # jhpce-python
 
 This is a repository to apply and use JHPCE cluster management locally
-in python. 
-
-Until it gets put on pypi, you can load with
+in python.  Until it gets put on pypi, you can load with
 
 ```
 from jhpce.jhpce.module import *
