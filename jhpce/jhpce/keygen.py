@@ -21,8 +21,9 @@ def loadkey(filename):
 
 def colabgetkey(secret_id):
     from getpass import getpass
-    password = getpass()
     import io
+    from colab import userdata
+    password = getpass()
     keyfile = io.StringIO()
     keyfile.write(userdata.get(secret_id))
     keyfile.seek(0)
