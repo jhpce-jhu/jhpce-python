@@ -12,8 +12,18 @@ def keygen(filename, password) :
     print("ssh-rsa " + key.get_base64())
     return key
 
-## Recommended way to load the password
-def loadkey(filename):
+## Recommended way to load the password is using getpass
+## If filename_is_key is set to true, then the user has supplied
+## the actual keyfile as text rather than a link to a filename
+def loadkey(filename, filename_is_key = False):
     from getpass import getpass
-    #password = getpass()
-    return paramiko.RSAKey.from_private_key_file(filename, getpass())
+    password = getpass()
+    if filename_is_key :
+        import io
+        keyfile = io.StringIO()
+        keyfile.write(filename)
+        keyfile.seek(0)
+        return paramiko.RSAKey.from_private_key_file(keyfile, password)
+    else :
+        return paramiko.RSAKey.from_private_key_file(filename, password)
+        
