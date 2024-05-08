@@ -4,8 +4,9 @@ from getpass import getpass
 #writes a private key to a file in the formate JHPCE wants
 #filename is the file and path, typically ~/.ssh/keyname
 #password is the password for the key and is required
-def keygen(filename, password, save_to_file = True) :
+def keygen(filename, save_to_file = True) :
     key = paramiko.RSAKey.generate(4096)
+    password = getpass("Enter a password")
     if save_to_file:
         key.write_private_key_file(filename, password = password)
         f = open(filename+".pub", "w")
