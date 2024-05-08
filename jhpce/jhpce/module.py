@@ -9,14 +9,11 @@ class jhpce():
     # Class for connecting to jhpce
     # Currently only connects to jhpce01
     def __init__(self,  username, pkey):
-        self.address01 = "jhpce01.jhsph.edu"
-        self.address02 = "jhpce02.jhsph.edu"
-        self.address03 = "jhpce03.jhsph.edu"
         self.username = username
         self.pkey = pkey
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.ssh.connect(self.address02, username = self.username, pkey = self.pkey)
+        self.ssh.connect("jhpce03.jhsph.edu", username = self.username, pkey = self.pkey)
         self.local_dir = os.getcwd()
         self.remote_dir = "$HOME"
         self.local_remote_mappings = {}        
@@ -28,8 +25,8 @@ class jhpce():
         self.ssh.close()
 
     ## if the connection gets closed
-    def reconnect(self):
-        self.ssh.connect(self.address03, username = self.username, pkey = self.pkey)                      
+    def reconnect(self, address = "jhpce03.jhsph.edu"):
+        self.ssh.connect(address, username = self.username, pkey = self.pkey)                      
 
     ##############################################################
     ## Local commands
@@ -57,7 +54,7 @@ class jhpce():
         else :
             print("Remote path does not exist " + path)
                     
-    def remote_ls(self, opts = "-alh", return_as_pd = False, print_results = True):
+    def remote_ls(self, opts = "-alh", return_as_pd = True, print_results = False):
         ## Force alh if returning as pd
         if return_as_pd:
             cmd = "ls -alh "
