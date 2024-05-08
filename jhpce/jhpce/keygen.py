@@ -22,8 +22,9 @@ def loadkey(filename):
 def colabgetkey(secret_id):
     from getpass import getpass
     import io
+    ## Note this is not included in requirements since it
+    ## only is useful on colab
     from google.colab import userdata
-    password = getpass()
     keyfile = io.StringIO()
     keyfile.write(userdata.get(secret_id))
     keyfile.seek(0)
