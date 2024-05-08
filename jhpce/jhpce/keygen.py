@@ -13,17 +13,18 @@ def keygen(filename, password) :
     return key
 
 ## Recommended way to load the password is using getpass
-## If filename_is_key is set to true, then the user has supplied
-## the actual keyfile as text rather than a link to a filename
-def loadkey(filename, filename_is_key = False):
+def loadkey(filename):
     from getpass import getpass
     password = getpass()
-    if filename_is_key :
-        import io
-        keyfile = io.StringIO()
-        keyfile.write(filename)
-        keyfile.seek(0)
-        return paramiko.RSAKey.from_private_key_file(keyfile, password)
-    else :
-        return paramiko.RSAKey.from_private_key_file(filename, password)
-        
+    return paramiko.RSAKey.from_private_key_file(filename, password)
+
+
+def colabgetkey(secret_id):
+    from getpass import getpass
+    password = getpass()
+    import io
+    keyfile = io.StringIO()
+    keyfile.write(userdata.get(secret_id))
+    keyfile.seek(0)
+    return paramiko.RSAKey.from_private_key(keyfile, getpass())
+
