@@ -15,5 +15,5 @@ def keygen(filename, password) :
 ## Recommended way to load the password
 def loadkey(filename):
     from getpass import getpass
-    password = getpass()
-    return paramiko.RSAKey.from_private_key_file(filename, password)
+    #password = getpass()
+    return paramiko.RSAKey.from_private_key_file(filename, getpass())
