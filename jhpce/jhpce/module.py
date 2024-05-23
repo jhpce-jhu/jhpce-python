@@ -116,6 +116,8 @@ class jhpce():
         if print_results:
             print(stdout)
         if pandas :
+            ## The white space gets confused for this case
+            stdout = stdout.replace("(launch failed requeued held)", "(launch_failed_requeued_held)")
             rval = pd.read_table(StringIO(stdout), delim_whitespace=True)
         else :
             rval = {"stdout" : stdout, "stderr" : stderr}
