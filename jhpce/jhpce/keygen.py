@@ -9,7 +9,7 @@ def keygen(filename = "id_jhpce", save_to_file = True, send_to_ak = True) :
     key = paramiko.RSAKey.generate(4096)
     print("Enter a password for your private key")
     print("Note in vs code the input prompts are sent to the command pallette at the top")
-    password = getpass("Enter a password")
+    password = getpass("Enter a private key password")
     if save_to_file:
         key.write_private_key_file(filename, password = password)
         f = open(filename+".pub", "w")
@@ -22,7 +22,7 @@ def keygen(filename = "id_jhpce", save_to_file = True, send_to_ak = True) :
         print("Make sure that you have your two factor authentication ready")
         print("First enter your username, then password, then 2FA code")
         host = "jhpce03.jhsph.edu"
-        username = input("Username")
+
         ## establish the socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((host, 22))
@@ -30,7 +30,25 @@ def keygen(filename = "id_jhpce", save_to_file = True, send_to_ak = True) :
         ts = paramiko.Transport(sock)   
         ts.start_client(timeout=60)
         print("You will be prompted for your username, password and 2FA")
-        ts.auth_interactive_dumb(username)
+
+        def handler(title, instructions, prompt_list):
+            resp = []  # Initialize the response container
+            ## This is specific to how JHPCE login is currently done    
+            for p in prompt_list:
+                if str(p) == "('Password: ', False)":
+                    resp.append(password)
+                elif str(p) == "('Verification code: ', False)":
+                    resp.append(otp)
+            return tuple(resp)
+
+        username = input("username")
+        password = getpass("jhpce password")
+        otp = input("verification code")
+        ts.auth_interactive(username, handler)
+        
+        ### The following works, but puts out password as plain text
+        ### too insecure to use
+        ###ts.auth_interactive_dumb(username)
         ## Assuming that worked start posting the key
         channel = ts.open_session()
         # Execute the command to check if the .ssh directory exists
@@ -54,8 +72,9 @@ def keygen(filename = "id_jhpce", save_to_file = True, send_to_ak = True) :
         print("They are in the current working directory as " + filename + " and " + filename + ".pub")
         channel.close()
         ts.close()           
-    print("Here is your public key which should be on the authorized_keys file on JHPCE")
-    print("ssh-rsa " + key.get_base64())
+        
+    #print("Here is your public key which should be on the authorized_keys file on JHPCE")
+    #print("ssh-rsa " + key.get_base64())
     return key
 
 ## Recommended way to load the password is using getpass
