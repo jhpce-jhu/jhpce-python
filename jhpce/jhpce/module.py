@@ -15,7 +15,7 @@ class jhpce():
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.ssh.connect("jhpce03.jhsph.edu", username = self.username, pkey = self.pkey)
         self.local_dir = os.getcwd()
-        self.remote_dir = "$HOME"
+        self.remote_dir = "/users/" + username + "/"
         self.local_remote_mappings = {}        
 
     ##############################################################
@@ -82,6 +82,17 @@ class jhpce():
             if print_results: print("Directory does not exist on jhpce")
             rval = False
         return rval
+    
+    def remote_touch(self, text, filename, path = ""):
+        sftp = self.ssh.open_sftp()
+        if path == "":
+            path = self.remote_dir
+            # Open the remote file for writing (this will create the file if it doesn't exist)
+        with sftp.file(path + filename, 'w') as remote_file:
+            # Write the string content to the file
+            remote_file.write(text)
+        
+        
     
     ##############################################################
     ## Git commands
