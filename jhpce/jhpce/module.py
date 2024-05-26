@@ -83,12 +83,13 @@ class jhpce():
             rval = False
         return rval
     
+    ### Writes a file on the remote
     def remote_touch(self, text, filename, path = ""):
         sftp = self.ssh.open_sftp()
         if path == "":
             path = self.remote_dir
             # Open the remote file for writing (this will create the file if it doesn't exist)
-        with sftp.file(path + filename, 'w') as remote_file:
+        with sftp.file(path + "/" + filename, 'w') as remote_file:
             # Write the string content to the file
             remote_file.write(text)
         
