@@ -47,12 +47,22 @@ class jhpce():
     ##############################################################
     ## Remote commands
     ##############################################################
-    def remote_set_dir(self, path):
-        if self.remote_dircheck(path, print_results = False):
-            print("Success")
-            self.remote_dir = path
-        else :
-            print("Remote path does not exist " + path)
+    def remote_set_dir(self, subdir = "", fullpath = ""):
+        if subdir != "":            
+            if self.remote_dircheck(subdir, print_results = False):
+                print("Success")
+                self.remote_dir = self.remote_dir + subdir + "/"
+            else :
+                print("Remote path does not exist " + path)
+        elif fullpath != "":
+            if self.remote_dircheck(fullpath, print_results = False):
+                print("Success")
+                self.remote_dir = fullpath
+            else :
+                print("Remote path does not exist " + path)
+        else:
+            print("One of subdir or full path must be specified")
+            
                     
     def remote_ls(self, opts = "-alh", return_as_pd = True, print_results = False):
         ## Force alh if returning as pd
@@ -165,13 +175,13 @@ class jhpce():
         return rval
     
     def remote_sbatch(self, script, opts = "", print_results = False):
-        cmd = "sbatch " + opts + " " + script
+        cmd = "cd " + self.remote_dir + "; " + "sbatch " + opts + " " + script
         stdin, stdout, stderr = self.ssh.exec_command(cmd)
         stdout = stdout.read().decode()
         stderr = stderr.read().decode()
         if print_results:
             print(stdout)
-        rval = {"stdout" : stdout, "stderr" : stderr}
+        rval = {"stdin": stdin, "stdout" : stdout, "stderr" : stderr}
         return rval
     
     def remote_scancel(self, jobid, opts = "", print_results = False):
