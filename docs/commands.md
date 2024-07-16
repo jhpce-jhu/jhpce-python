@@ -1,4 +1,8 @@
-# Command list
+# Attributes
+  - `local_rid` : Local working directory
+  - 'remote_dir` : Working remote directory
+
+# Commands
 
 ## Connections commands
 - `jhpce` : Establish a connection to the JHPCE cluster
@@ -17,9 +21,10 @@
 - `remote_git_push` : Push to the remote git repository
 
 ## Remote commands
-- `remote_set_dir` : Set the remote directory
-- `remote_ls` : List the files in the remote directory
 - `remote_dircheck` : Check if a remote directory exists
+- `remote_ls` : List the files in the remote directory
+- `remote_set_dir` : Set the remote directory
+- `remote_touch` : Send text to a file on the remote server
 
 ## Slurm commands
 - `remote_squeue` : List the jobs in the queue
