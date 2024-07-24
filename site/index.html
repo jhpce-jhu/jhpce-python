@@ -40,9 +40,13 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-                <li class="toctree-l1 current"><a class="reference internal current" href=".">HOME</a>
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">HOME</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    <li class="toctree-l2"><a class="reference internal" href="#installation-recommended">Installation (recommended)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installing-from-source">Installing from source</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#creating-a-key">Creating a key</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#establishing-a-connection">Establishing a connection</a>
     </li>
@@ -83,15 +87,43 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="jhpce-tools">jhpce-tools</h1>
-<p>This repository contains tools for working with the JHPCE cluster. The tools are designed to be used within python and have been tested within unix environments.</p>
-<h2 id="installation">Installation</h2>
-<p>Currently <code>jhpce-tools</code> is not on pypi. To install, clone the repository and run the following command from the root directory of the repository. Until it is on pypi, you will need to install it from the git repository, from which you should pull often.</p>
-<pre><code>from jhpce.jhpce.module import *
+<p>This repository contains tools for working with the JHPCE cluster while still working in your local environment. The tools are designed to be used within python.
+If you want to see a working example of the software, look <a href="https://colab.research.google.com/drive/1SUyhRhfvLps1Zkv-iAkyJVXNIRtcDbYf?usp=sharing">here</a></p>
+<h2 id="installation-recommended">Installation (recommended)</h2>
+<p>The package is called <code>jhpce</code> on pypi. To install, </p>
+<pre><code>pip install jhpce
 </code></pre>
+<h2 id="installing-from-source">Installing from source</h2>
+<p>Alternatively, if you want to install from source, clone the repository.  In the root directory of the software is the requirements. You 
+can install them with</p>
+<pre><code>pip install -r requirements.txt
+</code></pre>
+<p>(put an <code>!</code> in a jupyter notebook cell). Then load the software; this assumes that you're in the directory containing the github repo.</p>
+<pre><code>from jhpce.module import *
+from jhpce.keygen import *
+</code></pre>
+<h2 id="creating-a-key">Creating a key</h2>
+<p>To use this package, you need a public/private key pair for JHPCE. This package helps do this for you. You can generaate a key with</p>
+<pre><code>key = keygen()
+## Print out your public key to paste in your authorized_keys file on JHPCE
+print(&quot;ssh-rsa &quot; + key.get_base64())
+</code></pre>
+<p>This command generages two files, <code>id_jhpce</code> and <code>id_jhpce.pub</code> which are your public and private key pair. You need
+to store your private key somewhere secure and paste your public key onto your <code>authorized_keys</code> files on JHPCE.</p>
+<p>Alternatively, <a href="https://colab.research.google.com/drive/1I8VjmDDO86Qj0jJYMmDlZWrAoZwVLrpj?usp=sharing">this</a> jupyter notebook walks you through the process.</p>
+<p>One needs to have ssh paswordless access to the JHPCE cluster. For example, my username is <code>bcaffo</code> and I have a file <code>~/.ssh/id_rsa</code> that is my private key. You can set this up with</p>
+<pre><code>from jhpce.jhpce.keygen import *
+keygen()
+</code></pre>
+<p>This will prompt you for a password for the private key then your username, password and OTP (verification code). Then it will paste your public key onto your <code>authorized_keys</code> file on jhpce. Make sure to save your public and private key, which by default are in 
+<code>id_jhpce</code> and <code>id_jhpce.pub</code> in the current working directory.</p>
 <h2 id="establishing-a-connection">Establishing a connection</h2>
-<p>One needs to have ssh paswordless access to the JHPCE cluster. For example, my username is <code>bcaffo</code> and I have a file <code>~/.ssh/id_rsa</code> that is my private key.
-Given that this is set up, to establish a connections do the following:</p>
-<pre><code>con = jhpce(&quot;USERNAME&quot;, &quot;PATH_TO_YOUR_SSH_KEY/id_rsa&quot;)
+<p>Given that this is set up, to establish a connections do the following. First,
+load your key into python with the command</p>
+<pre><code>key = loadkey(&quot;FILENAME OR FULLPATHTOFILE&quot;)
+</code></pre>
+<p>This will load the private key. You can then establish a connection with:</p>
+<pre><code>con = jhpce(&quot;USERNAME&quot;, key)
 </code></pre>
 <p>or just</p>
 <pre><code>con = jhpce(&quot;USERNAME&quot;)
@@ -156,6 +188,6 @@ Given that this is set up, to establish a connections do the following:</p>
 </html>
 
 <!--
-MkDocs version : 1.5.3
-Build Date UTC : 2024-02-20 17:35:34.588106+00:00
+MkDocs version : 1.6.0
+Build Date UTC : 2024-07-24 00:32:34.353890+00:00
 -->
